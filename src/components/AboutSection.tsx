@@ -1,5 +1,6 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { Download, ArrowRight } from "lucide-react";
 
 const AboutSection = () => {
   const ref = useRef(null);
@@ -41,6 +42,21 @@ const AboutSection = () => {
                   Est. 2024
                 </span>
               </motion.div>
+
+              <motion.a
+                href="/cv-placeholder.pdf"
+                download="Alibek_Allaberganov_CV.pdf"
+                className="mt-8 inline-flex items-center gap-3 ghost-button text-foreground font-medium group"
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.5 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Download size={18} className="group-hover:animate-bounce" />
+                Download CV
+                <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+              </motion.a>
             </motion.div>
 
             <motion.div

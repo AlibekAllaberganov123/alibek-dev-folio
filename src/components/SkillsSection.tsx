@@ -2,157 +2,114 @@ import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
 const skills = [
-  {
-    name: "HTML5",
-    level: 95,
-    color: "from-orange-500 to-red-500",
-    icon: "🌐",
-  },
-  {
-    name: "CSS3",
-    level: 90,
-    color: "from-blue-500 to-cyan-500",
-    icon: "🎨",
-  },
-  {
-    name: "JavaScript",
-    level: 85,
-    color: "from-yellow-400 to-orange-500",
-    icon: "⚡",
-  },
-  {
-    name: "React.js",
-    level: 80,
-    color: "from-cyan-400 to-blue-500",
-    icon: "⚛️",
-  },
-  {
-    name: "Tailwind CSS",
-    level: 88,
-    color: "from-teal-400 to-cyan-500",
-    icon: "💨",
-  },
-  {
-    name: "Bootstrap",
-    level: 85,
-    color: "from-purple-500 to-violet-600",
-    icon: "🅱️",
-  },
-  {
-    name: "Git & GitHub",
-    level: 75,
-    color: "from-gray-600 to-gray-800",
-    icon: "🐙",
-  },
+  { name: "HTML5", icon: "🌐", delay: 0 },
+  { name: "CSS3", icon: "🎨", delay: 0.1 },
+  { name: "JavaScript", icon: "⚡", delay: 0.2 },
+  { name: "React.js", icon: "⚛️", delay: 0.3 },
+  { name: "Tailwind", icon: "💨", delay: 0.4 },
+  { name: "Bootstrap", icon: "🅱️", delay: 0.5 },
+  { name: "Git", icon: "🔀", delay: 0.6 },
+  { name: "GitHub", icon: "🐙", delay: 0.7 },
 ];
+
+const SkillCard = ({
+  skill,
+  index,
+  isInView,
+}: {
+  skill: (typeof skills)[0];
+  index: number;
+  isInView: boolean;
+}) => {
+  return (
+    <motion.div
+      className="group relative"
+      initial={{ opacity: 0, y: 30, rotateX: 45 }}
+      animate={isInView ? { opacity: 1, y: 0, rotateX: 0 } : {}}
+      transition={{
+        duration: 0.6,
+        delay: skill.delay + 0.3,
+        ease: [0.4, 0, 0.2, 1],
+      }}
+      style={{ perspective: "1000px" }}
+    >
+      <motion.div
+        className="brutalist-card p-6 md:p-8 flex flex-col items-center gap-4 cursor-pointer"
+        whileHover={{
+          rotateY: 10,
+          rotateX: -10,
+          z: 50,
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        style={{ transformStyle: "preserve-3d" }}
+      >
+        <div
+          className="text-4xl md:text-5xl glitch floating-cube"
+          data-text={skill.icon}
+          style={{ animationDelay: `${index * 0.5}s` }}
+        >
+          {skill.icon}
+        </div>
+
+        <span className="text-sm md:text-base font-medium text-foreground group-hover:gradient-text transition-all duration-300">
+          {skill.name}
+        </span>
+
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          style={{ transform: "translateZ(-10px)" }}
+        />
+      </motion.div>
+    </motion.div>
+  );
+};
 
 const SkillsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="skills" className="py-20 md:py-32 relative overflow-hidden">
-      {/* Background elements */}
-      <motion.div
-        className="absolute top-1/2 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[150px]"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{ duration: 10, repeat: Infinity }}
-      />
+    <section id="skills" className="py-32 relative overflow-hidden">
+      <div className="absolute inset-0 grid-background opacity-20" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Section header */}
-          <div className="text-center mb-16">
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.2 }}
-              className="inline-block px-4 py-1.5 text-sm font-medium text-secondary bg-secondary/10 rounded-full mb-4"
-            >
-              Texnologiyalar
-            </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.3 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-bold"
-            >
-              Mening <span className="neon-text-green">Skillarim</span>
-            </motion.h2>
-          </div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/3 rounded-full blur-[150px]" />
 
-          {/* Skills grid */}
-          <div className="max-w-4xl mx-auto">
-            <div className="grid gap-6">
-              {skills.map((skill, index) => (
-                <motion.div
-                  key={skill.name}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.4 + index * 0.1, duration: 0.5 }}
-                  className="glass-card p-4 md:p-6 group hover:border-primary/30 transition-all duration-300"
-                >
-                  <div className="flex items-center gap-4 mb-3">
-                    <span className="text-2xl">{skill.icon}</span>
-                    <span className="font-semibold text-foreground">
-                      {skill.name}
-                    </span>
-                    <span className="ml-auto text-sm text-muted-foreground font-mono">
-                      {skill.level}%
-                    </span>
-                  </div>
-
-                  {/* Progress bar */}
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={isInView ? { width: `${skill.level}%` } : {}}
-                      transition={{
-                        delay: 0.6 + index * 0.1,
-                        duration: 1,
-                        ease: "easeOut",
-                      }}
-                      className={`h-full rounded-full bg-gradient-to-r ${skill.color} relative`}
-                    >
-                      {/* Shimmer effect */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                        animate={{
-                          x: ["-100%", "100%"],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          repeatDelay: 3,
-                          ease: "easeInOut",
-                        }}
-                      />
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Additional info */}
+      <div className="container mx-auto px-6 relative z-10">
+        <motion.div ref={ref} className="max-w-5xl mx-auto">
           <motion.div
+            className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 1.2 }}
-            className="mt-12 text-center"
+            transition={{ duration: 0.6 }}
           >
-            <p className="text-muted-foreground">
-              ...va har kuni yangi narsalarni o'rganishda davom etmoqdaman 📚
-            </p>
+            <span className="text-sm font-mono text-primary tracking-widest">
+              02 — SKILLS
+            </span>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mt-4">
+              Tech <span className="gradient-text">Stack</span>
+            </h2>
           </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {skills.map((skill, index) => (
+              <SkillCard
+                key={skill.name}
+                skill={skill}
+                index={index}
+                isInView={isInView}
+              />
+            ))}
+          </div>
+
+          <motion.p
+            className="text-center text-muted-foreground mt-12 text-sm"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ delay: 1.2 }}
+          >
+            ...and constantly learning more
+          </motion.p>
         </motion.div>
       </div>
     </section>

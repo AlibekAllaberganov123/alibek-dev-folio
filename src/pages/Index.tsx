@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { Toaster } from "@/components/ui/sonner";
+import Lenis from "lenis";
 import LoadingScreen from "@/components/LoadingScreen";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -9,39 +10,57 @@ import ProjectsSection from "@/components/ProjectsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import CustomCursor from "@/components/CustomCursor";
+import ScrollProgress from "@/components/ScrollProgress";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading time
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+    });
 
-    return () => clearTimeout(timer);
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
   }, []);
 
   return (
     <>
-      <AnimatePresence mode="wait">
-        {isLoading && <LoadingScreen key="loading" />}
-      </AnimatePresence>
+      <Toaster position="top-center" />
 
-      {!isLoading && (
-        <div className="relative min-h-screen bg-background overflow-x-hidden">
-          <CustomCursor />
-          <Navbar />
-          <main>
-            <HeroSection />
-            <AboutSection />
-            <SkillsSection />
-            <ProjectsSection />
-            <ContactSection />
-          </main>
-          <Footer />
-        </div>
-      )}
+      {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
+
+      <div
+        className={`min-h-screen bg-background noise-overlay transition-opacity duration-500 ${
+          isLoading ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        <CustomCursor />
+        <ScrollProgress />
+        <Navbar />
+
+        <main>
+          <HeroSection />
+          <AboutSection />
+          <SkillsSection />
+          <ProjectsSection />
+          <ContactSection />
+        </main>
+
+        <Footer />
+      </div>
     </>
   );
 };
